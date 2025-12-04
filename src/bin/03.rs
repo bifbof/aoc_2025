@@ -35,7 +35,7 @@ fn max_jolts(values: &[u64], size: usize) -> u64 {
 fn part1(banks: &[Vec<u64>]) {
     let mut sum = 0;
     for bank in banks {
-        sum += max_jolts(&bank, 2);
+        sum += max_jolts(bank, 2);
     }
     println!("{sum}");
 }
@@ -43,7 +43,7 @@ fn part1(banks: &[Vec<u64>]) {
 fn part2(banks: &[Vec<u64>]) {
     let mut sum = 0;
     for bank in banks {
-        sum += max_jolts(&bank, 12);
+        sum += max_jolts(bank, 12);
     }
     println!("{sum}");
 }

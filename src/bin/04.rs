@@ -10,11 +10,7 @@ fn main() {
 fn parse() -> Grid<u8> {
     let filename = "input/04.txt";
     let data = std::fs::read_to_string(filename).expect("Unable to read file");
-    Grid::new(
-        data.lines()
-            .map(|line| line.as_bytes().iter().copied().collect())
-            .collect(),
-    )
+    Grid::new(data.lines().map(|line| line.as_bytes().to_vec()).collect())
 }
 
 // search and remove could be done in one go
@@ -37,7 +33,7 @@ fn part1(grid: &Grid<u8>) {
 fn part2(grid: &mut Grid<u8>) {
     let mut counter = 0;
     loop {
-        let removable = removable_hay(&grid);
+        let removable = removable_hay(grid);
         if removable.is_empty() {
             break;
         }
