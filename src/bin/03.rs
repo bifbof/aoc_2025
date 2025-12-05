@@ -24,7 +24,8 @@ fn max_jolts(values: &[u64], size: usize) -> u64 {
     let mut value = 0;
     for remaining in (0..size).rev() {
         let next = (start..values.len() - remaining)
-            .max_by_key(|idx| (values[*idx], usize::MAX - idx))
+            .rev()
+            .max_by_key(|idx| values[*idx])
             .unwrap();
         value = value * 10 + values[next];
         start = next + 1;

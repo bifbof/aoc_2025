@@ -1,12 +1,21 @@
 use std::ops::{Deref, DerefMut};
 
-use itertools::iproduct;
-
 pub struct Grid<T> {
     rows: usize,
     cols: usize,
     data: Vec<Vec<T>>,
 }
+
+const N3X3: [(isize, isize); 8] = [
+    (-1, -1),
+    (-1, 0),
+    (-1, 1),
+    (0, -1),
+    (0, 1),
+    (1, -1),
+    (1, 0),
+    (1, 1),
+];
 
 impl<T: Copy> Grid<T> {
     pub fn new(data: Vec<Vec<T>>) -> Self {
@@ -20,13 +29,11 @@ impl<T: Copy> Grid<T> {
     }
 
     pub fn neighbors(&self, (row, col): (usize, usize)) -> impl Iterator<Item = T> {
-        iproduct!(-1..=1, -1..=1)
-            .filter(|&(r, c)| !(r == 0 && c == 0))
-            .filter_map(move |(r, c)| {
-                let r = row.checked_add_signed(r)?;
-                let c = col.checked_add_signed(c)?;
-                self.get((r, c))
-            })
+        N3X3.into_iter().filter_map(move |(r, c)| {
+            let r = row.checked_add_signed(r)?;
+            let c = col.checked_add_signed(c)?;
+            self.get((r, c))
+        })
     }
 
     pub fn rows(&self) -> usize {
