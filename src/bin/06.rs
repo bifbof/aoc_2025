@@ -1,3 +1,17 @@
+enum Op {
+    Add,
+    Mul,
+}
+
+impl Op {
+    const fn neutral(&self) -> u64 {
+        match self {
+            Self::Add => 0,
+            Self::Mul => 1,
+        }
+    }
+}
+
 fn main() {
     let data = std::fs::read_to_string("input/06.txt").expect("Unable to read file");
     part1(&data);
@@ -22,20 +36,6 @@ fn part1(data: &str) {
         total += result;
     }
     println!("{total}");
-}
-
-enum Op {
-    Add,
-    Mul,
-}
-
-impl Op {
-    fn neutral(&self) -> u64 {
-        match self {
-            Self::Add => 0,
-            Self::Mul => 1,
-        }
-    }
 }
 
 fn part2(data: &str) {
