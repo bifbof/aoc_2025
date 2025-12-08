@@ -24,7 +24,7 @@ impl UnionFind {
     fn new(size: usize) -> Self {
         let find = (0..size).collect();
         let union = (0..size).map(|i| (i, vec![i])).collect();
-        Self { find: find, union }
+        Self { find, union }
     }
 
     fn find(&self, index: usize) -> usize {
@@ -52,7 +52,7 @@ impl UnionFind {
     fn finished(&self) -> bool {
         self.find
             .first()
-            .map_or(true, |idx| self.union[idx].len() == self.find.len())
+            .is_none_or(|idx| self.union[idx].len() == self.find.len())
     }
 
     fn groups(&self) -> impl Iterator<Item = &Vec<usize>> {
