@@ -85,6 +85,9 @@ fn solve(points: &[Point]) {
 
     for (&p0, &p1) in points.iter().tuple_combinations() {
         let area = u64::from(p0.0.abs_diff(p1.0) + 1) * u64::from(p0.1.abs_diff(p1.1) + 1);
+        if area < part2 {
+            continue;
+        }
         part1 = part1.max(area);
 
         let p01 = Point(p0.0, p1.1);
