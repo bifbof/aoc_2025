@@ -33,17 +33,13 @@ struct Polygon {
 }
 
 impl Polygon {
-    fn new(points: &[Point]) -> Self {
-        let first = points.first();
-        Self {
-            lines: points
-                .iter()
-                .chain(first)
-                .tuple_windows()
-                .map(|(p0, p1)| Line::new(*p0, *p1))
-                .collect(),
-            points: points.to_vec(),
-        }
+    fn new(points: Vec<Point>) -> Self {
+        let lines = points
+            .iter()
+            .circular_tuple_windows()
+            .map(|(p0, p1)| Line::new(*p0, *p1))
+            .collect();
+        Self { lines, points }
     }
 
     fn contains(&self, point: Point) -> bool {
@@ -83,7 +79,7 @@ fn parse() -> Vec<Point> {
 }
 
 fn solve(points: &[Point]) {
-    let polygon = Polygon::new(points);
+    let polygon = Polygon::new(points.to_vec());
     let mut part1: u64 = 0;
     let mut part2: u64 = 0;
 
@@ -96,7 +92,7 @@ fn solve(points: &[Point]) {
         if !polygon.contains(p01) || !polygon.contains(p10) {
             continue;
         }
-        let rect = Polygon::new(&[p0, p01, p1, p10]);
+        let rect = Polygon::new(vec![p0, p01, p1, p10]);
         // as all edges have length > 1 thus we cannot have empty holes
         // thus if we cross a line (without corners) we get always get a hole
         let crosses = rect
