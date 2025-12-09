@@ -47,8 +47,9 @@ impl Polygon {
                 return true;
             }
         }
-        // within <==> all quadrants uneven, outside ==> all quadrants even
-        // haven't really proved it but we are cutting lines if we are within
+        // within ==> all quadrants uneven, outside ==> all quadrants even
+        // The proof idea is the following: we can split up the form into rectangles
+        // the rectangle we are in creates the unevenness, all other rectangles only add even amount to quadrants
         let quadrant = self
             .points
             .iter()
@@ -89,7 +90,7 @@ fn solve(points: &[Point]) {
             continue;
         }
         let rect = Polygon::new(vec![p0, p01, p1, p10]);
-        // as all edges have length > 1 thus we cannot have empty holes
+        // as all edges have length > 1 we cannot have empty holes
         // thus if we cross a line (without corners) we get always get a hole
         let crosses = rect
             .lines
