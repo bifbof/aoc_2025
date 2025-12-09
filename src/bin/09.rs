@@ -1,5 +1,3 @@
-use core::cmp::Ordering;
-
 use itertools::Itertools as _;
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -49,19 +47,14 @@ impl Polygon {
                 return true;
             }
         }
-        // if within then it cuts lines that we have uneven quadrants
-        let mut quadrants = [0_usize; 4];
-        for p in &self.points {
-            let quadrant = match (p.0.cmp(&point.0), p.1.cmp(&point.1)) {
-                (Ordering::Greater, Ordering::Greater) => 0,
-                (Ordering::Greater, Ordering::Less) => 1,
-                (Ordering::Less, Ordering::Greater) => 2,
-                (Ordering::Less, Ordering::Less) => 3,
-                (Ordering::Equal, _) | (_, Ordering::Equal) => continue,
-            };
-            quadrants[quadrant] += 1;
-        }
-        quadrants.iter().any(|q| q % 2 == 1)
+        // within <==> all quadrants uneven, outside ==> all quadrants even
+        // haven't really proved it but we are cutting lines if we are within
+        let quadrant = self
+            .points
+            .iter()
+            .filter(|p| p.0 > point.0 && p.1 > point.1)
+            .count();
+        quadrant % 2 == 1
     }
 }
 
