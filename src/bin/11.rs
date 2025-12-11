@@ -1,4 +1,4 @@
-use std::{cmp::Reverse, collections::{HashMap, HashSet}};
+use std::collections::{HashMap, HashSet};
 
 // for some unnecessary complications reason lets make everything &str
 #[derive(Debug)]
@@ -17,39 +17,42 @@ impl<'graph> Graph<'graph> {
         self.edges.entry(from).or_default().push(to);
     }
 
-    fn dfs_exit_times(
-        &self,
-        node: &'graph str,
-        time: &mut u64,
-        outtime: &mut HashMap<&'graph str, u64>,
-    ) {
-        if outtime.contains_key(&node) {
-            return;
-        }
-        if let Some(neighs) = self.edges.get(node) {
+    fn dfs_exit_times(&self, node: &'graph str) -> Vec<&'graph str> {
+        let mut stack = vec![(node, false)];
+        let mut visited = HashSet::from([node]);
+        let mut exit_time = Vec::new();
+        while let Some((node, finished)) = stack.pop() {
+            if finished {
+                exit_time.push(node);
+                continue;
+            }
+            stack.push((node, true));
+            let Some(neighs) = self.edges.get(node) else {
+                continue;
+            };
             for neigh in neighs {
-                self.dfs_exit_times(neigh, time, outtime);
+                if !visited.contains(neigh) {
+                    stack.push((neigh, false));
+                    visited.insert(neigh);
+                }
             }
         }
-        outtime.insert(node, *time);
-        *time += 1;
+        exit_time.reverse();
+        exit_time
     }
 
     fn solve(&self, from: &str, to: &str) -> (u64, u64) {
-        let mut map = HashMap::new();
-        self.dfs_exit_times(from, &mut 0, &mut map);
-        let mut times: Vec<_> = map.into_iter().collect();
-        times.sort_unstable_by_key(|&(_, time)| Reverse(time));
+        let times = self.dfs_exit_times(from);
         // {visited neither, visited fft, visited dac, visited both}
         let mut possibilities = HashMap::from([(&from, (1, 0, 0, 0))]);
-        for (node, _) in times {
+        for node in times {
             let Some(neighs) = self.edges.get(node) else {
                 continue;
             };
             for neigh in neighs {
                 let pnode = possibilities[&node];
                 let pneigh = possibilities.entry(neigh).or_insert((0, 0, 0, 0));
-                match *neigh {
+                match node {
                     "fft" => {
                         pneigh.1 += pnode.0;
                         pneigh.3 += pnode.2;

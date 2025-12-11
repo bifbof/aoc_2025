@@ -20,8 +20,8 @@ const N3X3: [(isize, isize); 8] = [
 impl<T: Copy> Grid<T> {
     pub fn new(data: Vec<Vec<T>>) -> Self {
         let rows = data.len();
-        let cols = data.first().map_or(0, |row| row.len());
-        Grid { rows, cols, data }
+        let cols = data.first().map_or(0, Vec::len);
+        Self { rows, cols, data }
     }
 
     pub fn get(&self, (row, col): (usize, usize)) -> Option<T> {
@@ -36,11 +36,11 @@ impl<T: Copy> Grid<T> {
         })
     }
 
-    pub fn rows(&self) -> usize {
+    pub const fn rows(&self) -> usize {
         self.rows
     }
 
-    pub fn cols(&self) -> usize {
+    pub const fn cols(&self) -> usize {
         self.cols
     }
 }
