@@ -27,10 +27,7 @@ impl<'graph> Graph<'graph> {
                 continue;
             }
             stack.push((node, true));
-            let Some(neighs) = self.edges.get(node) else {
-                continue;
-            };
-            for neigh in neighs {
+            for neigh in self.edges.get(node).iter().copied().flatten() {
                 if !visited.contains(neigh) {
                     stack.push((neigh, false));
                     visited.insert(neigh);
@@ -46,10 +43,7 @@ impl<'graph> Graph<'graph> {
         // {visited neither, visited fft, visited dac, visited both}
         let mut possibilities = HashMap::from([(&from, (1, 0, 0, 0))]);
         for node in times {
-            let Some(neighs) = self.edges.get(node) else {
-                continue;
-            };
-            for neigh in neighs {
+            for neigh in self.edges.get(node).iter().copied().flatten() {
                 let pnode = possibilities[&node];
                 let pneigh = possibilities.entry(neigh).or_insert((0, 0, 0, 0));
                 match node {
