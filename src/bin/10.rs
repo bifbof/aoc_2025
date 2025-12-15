@@ -106,6 +106,7 @@
 //     total
 // }
 
+// commented out to avoid building `good_lp` for all the other bin that don't need them
 fn main() {
 
 }

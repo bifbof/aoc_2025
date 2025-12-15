@@ -28,9 +28,8 @@ impl<'graph> Graph<'graph> {
             }
             stack.push((node, true));
             for neigh in self.edges.get(node).iter().copied().flatten() {
-                if !visited.contains(neigh) {
+                if visited.insert(&neigh) {
                     stack.push((neigh, false));
-                    visited.insert(neigh);
                 }
             }
         }

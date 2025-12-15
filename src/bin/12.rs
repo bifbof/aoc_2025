@@ -9,7 +9,7 @@ fn main() {
     let mut this = 0;
     for prob in problems.lines() {
         let (grid, nums) = prob.split_once(": ").unwrap();
-        let (rows, cols) = grid.split_once("x").unwrap();
+        let (rows, cols) = grid.split_once('x').unwrap();
         let area = rows.parse::<usize>().unwrap() * cols.parse::<usize>().unwrap();
         let needed: usize = nums
             .split(' ')
